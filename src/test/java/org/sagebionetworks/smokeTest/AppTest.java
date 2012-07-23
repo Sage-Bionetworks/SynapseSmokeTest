@@ -29,6 +29,7 @@ import org.junit.After;
 import org.junit.Ignore;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -54,18 +55,18 @@ public class AppTest {
 	private static String crowdAdminPassword;
 	private static String crowdConsoleUrl;
 	
-	private static final String synapseLoginInputId = "x-auto-24-input";
-	private static final String synapsePasswdInputId = "x-auto-25-input";
-	private static final String newUserEmailInputId = "x-auto-23-input";
-	private static final String newUserFirstNameInputId = "x-auto-24-input";
-	private static final String newUserLastNameInputId = "x-auto-25-input";
+	private static final String synapseLoginInputXpath = "//div/div/input[@type='text']";
+	private static final String synapsePasswordInputXpath = "//div/div/input[@type='password']";
+	private static final String newUserEmailIputXpath = "x-auto-23-input";
+	private static final String newUserFirstNameInputXpath = "x-auto-24-input";
+	private static final String newUserLastNameInputXpath = "x-auto-25-input";
 	
 	
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		loadProperties("");
 		driver = new FirefoxDriver();
-		baseUrl = "http://synapse.sagebase.org/";
+		baseUrl = "https://synapse-staging.sagebase.org/";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 	
@@ -80,84 +81,81 @@ public class AppTest {
 		Thread.sleep(5000);
 	}
 	
+	@Ignore
 	@Test
 	public void testAnonBrowse() throws Exception {
 		WebElement el;
 		String url;
 		assertEquals("Sage Synapse : Contribute to the Cure", driver.getTitle());
-		el = driver.findElement(By.linkText("SYNAPSE COMMONS REPOSITORY"));
+		el = driver.findElement(By.xpath("//div/h5/a[@href='#Synapse:syn150935']"));
 		el.click();
 		url = driver.getCurrentUrl();
 		assertEquals(url, "https://synapse.sagebase.org/#Synapse:syn150935");
 	}
 
+	@Ignore
 	@Test
 	public void testSynapseLoginFailure() throws Exception {
 		WebElement el;
 		assertEquals("Sage Synapse : Contribute to the Cure", driver.getTitle());
-		el = driver.findElement(By.linkText("LOGIN"));
+		el = driver.findElement(By.xpath("//button[contains(., 'Login')]"));
 		el.click();
-		el = driver.findElement(By.cssSelector("h2"));
+		el = driver.findElement(By.xpath("//h2[contains(., 'Login to Synapse')]"));
 		assertEquals("Login to Synapse", el.getText().trim());
-		el = driver.findElement(By.id(synapseLoginInputId));
+		el = driver.findElement(By.xpath(synapseLoginInputXpath));
 		el.clear();
 		el.sendKeys("abcde@xxx.org");
-		el = driver.findElement(By.id(synapsePasswdInputId));
+		el = driver.findElement(By.xpath(synapsePasswordInputXpath));
 		el.clear();
 		el.sendKeys("abcde");
-		List<WebElement> l = driver.findElements(By.cssSelector("button.x-btn-text"));
-		for (WebElement e : l) {
-			if ("Login".equals(e.getText())) {
-				e.click();
-				break;
-			}
-		}
-		// TODO: Check for red error text instead of Welcome text
-		el = driver.findElement(By.cssSelector("h5"));
-		assertFalse("Invalid username or password.".equals(el.getText().trim()));
+		// TODO: Simplify xpath
+		el = driver.findElement(By.xpath("/html/body/div/div[2]/div/div/div[3]/div[2]/div[3]/div/div/div/table/tbody/tr[2]/td/div/div[2]/div/div/div/div/form/fieldset/div/table/tbody/tr[2]/td[2]/em/button"));
+		el.click();
+		// TODO: Why does Firepath returns this xpath?
+		el = driver.findElement(By.xpath("//*[@id='x-auto-33']"));
+		assertTrue("Invalid username or password.".equals(el.getText().trim()));
 	}
 	
 	@Test
 	public void testSynapseLoginSuccess() throws Exception {
 		WebElement el;
 		assertEquals("Sage Synapse : Contribute to the Cure", driver.getTitle());
-		el = driver.findElement(By.linkText("LOGIN"));
+		el = driver.findElement(By.xpath("//button[contains(., 'Login')]"));
 		el.click();
-		el = driver.findElement(By.cssSelector("h2"));
+		el = driver.findElement(By.xpath("//h2[contains(., 'Login to Synapse')]"));
 		assertEquals("Login to Synapse", el.getText().trim());
-		el = driver.findElement(By.id(synapseLoginInputId));
+		el = driver.findElement(By.xpath(synapseLoginInputXpath));
 		el.clear();
 		el.sendKeys(existingSynapseUserEmailName);
-		el = driver.findElement(By.id(synapsePasswdInputId));
+		el = driver.findElement(By.xpath(synapsePasswordInputXpath));
 		el.clear();
 		el.sendKeys(existingSynapseUserPassword);
-		List<WebElement> l = driver.findElements(By.cssSelector("button.x-btn-text"));
-		for (WebElement e : l) {
-			if ("Login".equals(e.getText())) {
-				el = e;
-				break;
-			}
-		}
-		assertEquals("Login", el.getText().trim());
+		el.click();
+		el = driver.findElement(By.xpath("/html/body/div/div[2]/div/div/div[3]/div[2]/div[3]/div/div/div/table/tbody/tr[2]/td/div/div[2]/div/div/div/div/form/fieldset/div/table/tbody/tr[2]/td[2]/em/button"));
 		el.click();
 		Thread.sleep(1000);
-		el = driver.findElement(By.cssSelector("h5"));
-		String msg = "Welcome " + existingSynapseUserFirstName + " " + existingSynapseUserLastName;
-		assertEquals(msg, el.getText().trim());
-		el = driver.findElement(By.linkText("LOGOUT"));
+		el = driver.findElement(By.xpath("/html/body/div/div[2]/div/div/div[3]/div/div/div/table/tbody/tr/td/table/tbody/tr[2]/td[2]/em/button"));
+		String txt = existingSynapseUserFirstName + " " + existingSynapseUserLastName;
+		assertEquals(txt, el.getText().trim());
 		el.click();
+		el = driver.findElement(By.xpath("//div/div[2]/a[contains(., 'Logout')]"));
+		el.click();
+		el = driver.findElement(By.xpath("//div[3]/div/div[2]/div/div[2]"));
+		txt = "You have been logged out of Synapse.";
+		assertEquals(txt, el.getText().trim());
 	}
 	
+	@Ignore
 	@Test
 	public void testOpenIdLoginNotLoggedIn() throws Exception {
 		WebElement el;
 		// TODO: Add check that we are not logged into Google
 		assertEquals("Sage Synapse : Contribute to the Cure", driver.getTitle());
-		el = driver.findElement(By.linkText("LOGIN"));
+		el = driver.findElement(By.xpath("//button[contains(., 'Login')]"));
 		el.click();
-		el = driver.findElement(By.cssSelector("h2"));
+		el = driver.findElement(By.xpath("//h2[contains(., 'Login to Synapse')]"));
 		assertEquals("Login to Synapse", el.getText().trim());
-		el = driver.findElement(By.id("login-via-gapp-google"));
+		el = driver.findElement(By.xpath("//form[@id='gapp-openid-form']/button[@id='login-via-gapp-google'][@type='submit']"));
 		assertEquals("Login with a Google Account", el.getText().trim());
 		el.click();
 		// TODO: Move sign in at Google to own fct
@@ -181,16 +179,17 @@ public class AppTest {
 		el.click();
 	}
 	
+	@Ignore
 	@Test
 	public void testOpenIdLoginLoggedIn() throws Exception {
 		WebElement el;
 		assertEquals("Sage Synapse : Contribute to the Cure", driver.getTitle());
 		// TODO: Add check that we are logged in
-		el = driver.findElement(By.linkText("LOGIN"));
+		el = driver.findElement(By.xpath("//button[contains(., 'Login')]"));
 		el.click();
-		el = driver.findElement(By.cssSelector("h2"));
+		el = driver.findElement(By.xpath("//h2[contains(., 'Login to Synapse')]"));
 		assertEquals("Login to Synapse", el.getText().trim());
-		el = driver.findElement(By.id("login-via-gapp-google"));
+		el = driver.findElement(By.xpath("//form[@id='gapp-openid-form']/button[@id='login-via-gapp-google'][@type='submit']"));
 		assertEquals("Login with a Google Account", el.getText().trim());
 		el.click();
 		// TODO: Better way to handle redirections
@@ -203,6 +202,7 @@ public class AppTest {
 		el.click();
 	}
 	
+	@Ignore
 	@Test
 	public void testRegisterUser() throws Exception {
 		WebElement el;
@@ -210,17 +210,17 @@ public class AppTest {
 		Thread.sleep(1000L);
 		// TODO: Delete test account if exists
 		//	Register in UI
-		el = driver.findElement(By.linkText("REGISTER"));
+		el = driver.findElement(By.xpath("//button[contains(., 'Register')]"));
 		el.click();
 		el = driver.findElement(By.cssSelector("h2"));
 		assertEquals("Register With Synapse", el.getText().trim());
-		el = driver.findElement(By.id(newUserEmailInputId));
+		el = driver.findElement(By.id(newUserEmailIputXpath));
 		el.clear();
 		el.sendKeys(newUserEmailName);
-		el = driver.findElement(By.id(newUserFirstNameInputId));
+		el = driver.findElement(By.id(newUserFirstNameInputXpath));
 		el.clear();
 		el.sendKeys(newUserFirstName);
-		el = driver.findElement(By.id(newUserLastNameInputId));
+		el = driver.findElement(By.id(newUserLastNameInputXpath));
 		el.clear();
 		el.sendKeys(newUserLastName);
 		List<WebElement> l = driver.findElements(By.cssSelector("button.x-btn-text"));
@@ -303,7 +303,7 @@ public class AppTest {
 	@Test
 	public void testGetEmail() throws Exception {
 		String url;
-		String msg = getRegistrationMail("xschildwachter@gmail.com", "GM_XS1964");
+		String msg = getRegistrationMail(newUserEmailName, newUserEmailPassword);
 		Pattern p = Pattern.compile("https://.+");
 		Matcher m = p.matcher(msg);
 		int nMatches = 0;
@@ -431,7 +431,7 @@ public class AppTest {
 		el.click();
 		el = driver.findElement(By.name("search"));
 		el.clear();
-		el.sendKeys("xschildwachter@gmail.com");
+		el.sendKeys(newUserEmailName);
 		el = driver.findElement(By.name("submit-search"));
 		el.click();
 		String lt = newUserFirstName + " " + newUserLastName;
