@@ -21,22 +21,19 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.junit.*;
-import org.junit.Test;
-import org.junit.BeforeClass;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.After;
-import org.junit.Ignore;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
 public class AppTest {
 	private static WebDriver driver;
+	private static HomePage homePage;
+	
 	private static String baseUrl;
 	private static String existingSynapseUserEmailName;
 	private static String existingSynapseUserPassword;
@@ -79,6 +76,15 @@ public class AppTest {
 	public void setUp() throws Exception {
 		driver.get(baseUrl);
 		Thread.sleep(5000);
+		homePage = PageFactory.initElements(this.driver, HomePage.class);
+		homePage.check();
+	}
+	
+	@Ignore
+	@Test
+	public void testPageObject() throws Exception {
+		LoginPage loginPage = this.homePage.login();
+		loginPage.check();
 	}
 	
 	@Ignore
@@ -93,10 +99,13 @@ public class AppTest {
 		assertEquals(url, "https://synapse.sagebase.org/#Synapse:syn150935");
 	}
 
-	@Ignore
 	@Test
 	public void testSynapseLoginFailure() throws Exception {
-		WebElement el;
+		LoginPage loginPage = this.homePage.login();
+		loginPage.check();
+		Page p = loginPage.synapseLogin("abcde@xxx.org", "abcde");
+		
+/*		WebElement el;
 		assertEquals("Sage Synapse : Contribute to the Cure", driver.getTitle());
 		el = driver.findElement(By.xpath("//button[contains(., 'Login')]"));
 		el.click();
@@ -111,11 +120,13 @@ public class AppTest {
 		// TODO: Simplify xpath
 		el = driver.findElement(By.xpath("/html/body/div/div[2]/div/div/div[3]/div[2]/div[3]/div/div/div/table/tbody/tr[2]/td/div/div[2]/div/div/div/div/form/fieldset/div/table/tbody/tr[2]/td[2]/em/button"));
 		el.click();
+*/
 		// TODO: Why does Firepath returns this xpath?
-		el = driver.findElement(By.xpath("//*[@id='x-auto-33']"));
+		WebElement el = driver.findElement(By.xpath("//*[@id='x-auto-33']"));
 		assertTrue("Invalid username or password.".equals(el.getText().trim()));
 	}
 	
+	@Ignore
 	@Test
 	public void testSynapseLoginSuccess() throws Exception {
 		WebElement el;
