@@ -7,14 +7,17 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.FindBy;
 
+/*
+ *	This is the page we land on originally 
+*/
 public class HomePage extends Page {
 	public HomePage(WebDriver driver) {
 		super(driver);
 	}
 	
-	@FindBy(xpath="//button[contains(., 'Login')]")
+	@FindBy(xpath="//table[@id='"+UiConstants.ID_BTN_LOGIN+"'/tbody/tr[2]/td[2]/button")
 	private WebElement login; // Login button
-	@FindBy(xpath="//button[contains(., 'Register')]")
+	@FindBy(xpath="//table[@id='"+UiConstants.ID_BTN_REGISTER+"'/tbody/tr[2]/td[2]/button")
 	private WebElement register; // Register button
 	
 	public void check() {

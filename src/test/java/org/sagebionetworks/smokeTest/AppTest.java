@@ -76,7 +76,7 @@ public class AppTest {
 	public void setUp() throws Exception {
 		driver.get(baseUrl);
 		Thread.sleep(5000);
-		homePage = PageFactory.initElements(this.driver, HomePage.class);
+		homePage = PageFactory.initElements(driver, HomePage.class);
 		homePage.check();
 	}
 	
