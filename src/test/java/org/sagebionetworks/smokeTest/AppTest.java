@@ -26,6 +26,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
@@ -62,9 +63,10 @@ public class AppTest {
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		loadProperties("");
-		driver = new FirefoxDriver();
-		baseUrl = "https://synapse-staging.sagebase.org/";
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		//driver = new FirefoxDriver();
+		driver = new ChromeDriver();
+		baseUrl = "127.0.0.1:8888/Portal.html?gwt.codesvr=127.0.0.1:9997";
+		//driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 	
 	@AfterClass
@@ -77,14 +79,11 @@ public class AppTest {
 		driver.get(baseUrl);
 		Thread.sleep(5000);
 		homePage = PageFactory.initElements(driver, HomePage.class);
-		homePage.check();
 	}
 	
-	@Ignore
 	@Test
 	public void testPageObject() throws Exception {
-		LoginPage loginPage = this.homePage.login();
-		loginPage.check();
+		LoginPage loginPage = AppTest.homePage.login();
 	}
 	
 	@Ignore
@@ -99,15 +98,16 @@ public class AppTest {
 		assertEquals(url, "https://synapse.sagebase.org/#Synapse:syn150935");
 	}
 
+	@Ignore
 	@Test
 	public void testSynapseLoginFailure() throws Exception {
-		LoginPage loginPage = this.homePage.login();
-		loginPage.check();
+		LoginPage loginPage = AppTest.homePage.login();
 		Page p = loginPage.synapseLogin("abcde@xxx.org", "abcde");
 		
-/*		WebElement el;
+/*
+ 		WebElement el;
 		assertEquals("Sage Synapse : Contribute to the Cure", driver.getTitle());
-		el = driver.findElement(By.xpath("//button[contains(., 'Login')]"));
+		el = driver.findElement(By.xpath("//table[@id='"+UiConstants.ID_BTN_LOGIN+"'/tbody/tr[2]/td[2]/button"));
 		el.click();
 		el = driver.findElement(By.xpath("//h2[contains(., 'Login to Synapse')]"));
 		assertEquals("Login to Synapse", el.getText().trim());
@@ -473,4 +473,20 @@ public class AppTest {
 		assertEquals("Log Out", el.getText().trim());
 		el.click();
 	}
+	
+	@Ignore
+	@Test
+	public void testChromeDriver() {
+//	  // Optional, if not specified, WebDriver will search your path for chromedriver.
+//	  System.setProperty("webdriver.chrome.driver", "/usr/local/chromedriver");
+
+	  WebDriver driver = new ChromeDriver();
+	  driver.get("http://www.google.com/xhtml");
+	  WebElement searchBox = driver.findElement(By.name("q"));
+	  searchBox.sendKeys("ChromeDriver");
+	  searchBox.submit();
+	  driver.quit();
+	}
+	
+
 }

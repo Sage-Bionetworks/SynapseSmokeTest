@@ -16,5 +16,9 @@ public class UiConstants {
 	public static final String ID_BTN_LOGIN2 = "id_btn_login2";
 	public static final String ID_MNU_USER_PROFILE = "id_mnu_user_profile";
 	public static final String ID_MNU_USER_LOGOUT = "id_mnu_user_logout";
+	
+	/*
+	 * 
+	 */
 
 }

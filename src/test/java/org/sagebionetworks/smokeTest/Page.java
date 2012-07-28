@@ -8,4 +8,5 @@ public class Page {
 	public Page(WebDriver driver) {
 		this.driver = driver;
 	}
+	
 }

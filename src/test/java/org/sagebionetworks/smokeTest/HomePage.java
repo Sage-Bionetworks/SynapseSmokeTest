@@ -11,32 +11,29 @@ import org.openqa.selenium.support.FindBy;
  *	This is the page we land on originally 
 */
 public class HomePage extends Page {
-	public HomePage(WebDriver driver) {
+	
+	private static final String loginButtonXpath = "//table[@id='"+UiConstants.ID_BTN_LOGIN+"']/tbody/tr[2]/td[2]/em/button";
+	private static final String registerButtonXpath = "//table[@id='"+UiConstants.ID_BTN_REGISTER+"']/tbody/tr[2]/td[2]/em/button";
+	
+	public HomePage(WebDriver driver) throws RuntimeException {
 		super(driver);
 	}
 	
-	@FindBy(xpath="//table[@id='"+UiConstants.ID_BTN_LOGIN+"'/tbody/tr[2]/td[2]/button")
-	private WebElement login; // Login button
-	@FindBy(xpath="//table[@id='"+UiConstants.ID_BTN_REGISTER+"'/tbody/tr[2]/td[2]/button")
-	private WebElement register; // Register button
-	
-	public void check() {
-		// TODO: Get better test
-		assertEquals("Sage Synapse : Contribute to the Cure", driver.getTitle());
-	}
+	@FindBy(xpath=loginButtonXpath)
+	private WebElement btnLogin;
+	@FindBy(xpath=registerButtonXpath)
+	private WebElement btnRegister;
 	
 	public LoginPage login() {
-		login.click();
+		btnLogin.click();
 		LoginPage loginPage = PageFactory.initElements(this.driver, LoginPage.class);
 		return loginPage;
 	}
 	
 	public RegisterPage register() {
-		register.click();
+		btnRegister.click();
 		RegisterPage registerPage = PageFactory.initElements(this.driver, RegisterPage.class);
 		return registerPage;
 	}
-	
-	// TODO: Add anon browse here
 	
 }
