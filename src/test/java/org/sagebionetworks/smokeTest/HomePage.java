@@ -1,6 +1,7 @@
 package org.sagebionetworks.smokeTest;
 
 import static org.junit.Assert.assertEquals;
+import org.openqa.selenium.By;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,28 +13,18 @@ import org.openqa.selenium.support.FindBy;
 */
 public class HomePage extends Page {
 	
-	private static final String loginButtonXpath = "//table[@id='"+UiConstants.ID_BTN_LOGIN+"']/tbody/tr[2]/td[2]/em/button";
-	private static final String registerButtonXpath = "//table[@id='"+UiConstants.ID_BTN_REGISTER+"']/tbody/tr[2]/td[2]/em/button";
-	
 	public HomePage(WebDriver driver) throws RuntimeException {
 		super(driver);
 	}
 	
-	@FindBy(xpath=loginButtonXpath)
-	private WebElement btnLogin;
-	@FindBy(xpath=registerButtonXpath)
-	private WebElement btnRegister;
-	
-	public LoginPage login() {
-		btnLogin.click();
-		LoginPage loginPage = PageFactory.initElements(this.driver, LoginPage.class);
-		return loginPage;
+	public EntityPage gotoSCR() {
+		EntityPage p;
+		WebElement el;
+		// TODO: Fix id and change xpath
+		el = driver.findElement(By.xpath("//div/h5/a[@href='#Synapse:syn150935']"));
+		el.click();
+		
+		p = PageFactory.initElements(driver, EntityPage.class);
+		return p;
 	}
-	
-	public RegisterPage register() {
-		btnRegister.click();
-		RegisterPage registerPage = PageFactory.initElements(this.driver, RegisterPage.class);
-		return registerPage;
-	}
-	
 }
