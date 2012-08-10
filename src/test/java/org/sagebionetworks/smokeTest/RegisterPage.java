@@ -25,7 +25,7 @@ public class RegisterPage extends Page {
 		super(driver);
 	}
 	
-	public void register(String userEmail, String userFirstName, String userLastName) {
+	public RegisterPage register(String userEmail, String userFirstName, String userLastName) {
 		inputNewUserEmail.clear();
 		inputNewUserEmail.sendKeys(userEmail);
 		inputNewUserFirstName.clear();
@@ -33,6 +33,11 @@ public class RegisterPage extends Page {
 		inputNewUserLastName.clear();
 		inputNewUserLastName.sendKeys(userLastName);
 		btnRegister.click();
-		
+		// TODO: Add check for "Register with Synapse" label
+		return this;
+	}
+	
+	public boolean isSynapseAccountCreated() {
+		return true;
 	}
 }

@@ -92,7 +92,7 @@ public class AppTest {
 		// TODO: check for error message on login page >> change API
 	}
 	
-	
+	@Ignore
 	@Test
 	public void testSynapseLoginSuccess() throws Exception {
 		LoginPage loginPage = AppTest.homePage.login();
@@ -113,7 +113,7 @@ public class AppTest {
 		// TODO: Logout of Google if logged in
 		LoginPage loginPage = AppTest.homePage.login();
 		assertEquals(loginPage.getDriverUrl(), baseUrl + UiConstants.STR_LOGIN_PAGE);
-		UserHomePage p = loginPage.synapseLogin(testConfiguration.getExistingSynapseUserEmailName(), testConfiguration.getExistingSynapseUserPassword());
+		UserHomePage p = loginPage.openIdLogin(testConfiguration.getExistingSynapseUserEmailName(), testConfiguration.getExistingSynapseUserPassword());
 		assertNotNull(p);
 		assertTrue(p.loggedIn());
 		
@@ -123,7 +123,7 @@ public class AppTest {
 
 	}
 	
-	@Ignore
+	
 	@Test
 	public void testOpenIdLoginLoggedIn() throws Exception {
 		LoginPage loginPage = AppTest.homePage.login();
@@ -144,30 +144,12 @@ public class AppTest {
 		Thread.sleep(1000L);
 		// TODO: Delete test account if exists
 		//	Register in UI
-		el = driver.findElement(By.xpath("//button[contains(., 'Register')]"));
-		el.click();
-		el = driver.findElement(By.cssSelector("h2"));
-		assertEquals("Register With Synapse", el.getText().trim());
-		el = driver.findElement(By.id(newUserEmailIputXpath));
-		el.clear();
-		el.sendKeys(testConfiguration.getNewUserEmailName());
-		el = driver.findElement(By.id(newUserFirstNameInputXpath));
-		el.clear();
-		el.sendKeys(testConfiguration.getNewUserFirstName());
-		el = driver.findElement(By.id(newUserLastNameInputXpath));
-		el.clear();
-		el.sendKeys(testConfiguration.getNewUserLastName());
-		List<WebElement> l = driver.findElements(By.cssSelector("button.x-btn-text"));
-		for (WebElement e : l) {
-			if ("Register".equals(e.getText().trim())) {
-				e.click();
-				break;
-			}
-		}
-		Thread.sleep(2000);
+		RegisterPage registerPage = homePage.register();
+		registerPage.register(testConfiguration.getNewUserEmailName(), testConfiguration.getNewUserFirstName(), testConfiguration.getNewUserLastName());
 		el = driver.findElement(By.cssSelector("h2"));
 		assertEquals("Register With Synapse", el.getText().trim());
 		
+		// TODO: Put in utility function
 		// Get link from mail msg
 		String msg = Helpers.getRegistrationMail(testConfiguration.getNewUserEmailName(), testConfiguration.getNewUserEmailPassword());
 		Pattern p = Pattern.compile("https://.+");
@@ -180,6 +162,7 @@ public class AppTest {
 		}
 		assertEquals(1, nMatches);
 		
+		// This should be equivalent to Reset Password method
 		// Set new user password
 		driver.get(url);
 		Thread.sleep(1000);
@@ -192,13 +175,14 @@ public class AppTest {
 		el = driver.findElement(By.id("x-auto-13-input"));
 		el.clear();
 		el.sendKeys(testConfiguration.getNewUserSynapsePassword());
-		l = driver.findElements(By.cssSelector("button.x-btn-text"));
+		List<WebElement> l = driver.findElements(By.cssSelector("button.x-btn-text"));
 		for (WebElement e : l) {
 			if ("Submit".equals(e.getText().trim())) {
 				e.click();
 				break;
 			}
-		}			
+		}
+		
 		// Back to login page
 //		//!!! Not like that anymore, first need to sign end-user agreement !!!
 //		el = driver.findElement(By.cssSelector("h5"));
