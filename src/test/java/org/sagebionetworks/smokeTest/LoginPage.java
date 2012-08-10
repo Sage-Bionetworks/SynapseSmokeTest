@@ -10,19 +10,21 @@ import org.openqa.selenium.support.FindBy;
 
 public class LoginPage extends Page {
 	
-	private static final String synapseLoginInputXpath = "//div/div/input[@type='text']";
-	private static final String synapsePasswordInputXpath = "//div/div/input[@type='password']";
-	private static final String synapseLoginButtonXpath = "/html/body/div/div[2]/div/div/div[3]/div[2]/div[3]/div/div/div/table/tbody/tr[2]/td/div/div[2]/div/div/div/div/form/fieldset/div/table/tbody/tr[2]/td[2]/em/button";
-	private static final String openIdLoginButtonXpath = "//form[@id='gapp-openid-form']/button[@id='login-via-gapp-google'][@type='submit']";
+	private static final String synapseLoginInputXpath = "//input[@id='" + UiConstants.ID_INP_EMAIL_NAME + "-input']";
+	private static final String synapseLoginInputId = UiConstants.ID_INP_EMAIL_NAME + "-input";
+	private static final String synapsePasswordInputXpath = "//input[@id='" + UiConstants.ID_INP_EMAIL_PASSWORD + "-input']";
+	private static final String synapsePasswordInputId = UiConstants.ID_INP_EMAIL_PASSWORD + "-input";
+	private static final String synapseLoginButtonXpath = "//table[@id='" + UiConstants.ID_BTN_LOGIN2 + "']/tbody/tr[2]/td[2]/em/button";
+	private static final String openIdLoginButtonXpath = "//form[@id='gapp-openid-form']//button[@id='"+ UiConstants.ID_BTN_GOOGLE_LOGIN + "'][@type='submit']";
 	
 	public LoginPage(WebDriver driver) {
 		super(driver);
 	}
 	
-	@FindBy(xpath=synapseLoginInputXpath)
+	@FindBy(id=synapseLoginInputId)
 	private WebElement inputSynapseLogin;
 	
-	@FindBy(xpath=synapsePasswordInputXpath)
+	@FindBy(id=synapsePasswordInputId)
 	private WebElement inputSynapsePassword;
 	
 	@FindBy(xpath=synapseLoginButtonXpath)
@@ -31,27 +33,43 @@ public class LoginPage extends Page {
 	@FindBy(xpath=openIdLoginButtonXpath)
 	private WebElement btnOpenIdLogin;
 	
-	public void check() {
-		WebElement el = driver.findElement(By.xpath("//h2[contains(., 'Login to Synapse')]"));
-		assertEquals("Login to Synapse", el.getText().trim());
+	public UserHomePage synapseLogin(String user, String password) throws InterruptedException {
+		inputSynapseLogin.clear();
+		inputSynapseLogin.sendKeys(user);
+		inputSynapsePassword.clear();
+		inputSynapsePassword.sendKeys(password);
+		Thread.sleep(500);
+		btnSynapseLogin.click();
+		Thread.sleep(2000);
+		if (this.loggedIn()) {
+			UserHomePage p = PageFactory.initElements(driver, UserHomePage.class);
+			return p;
+		} else {
+			return null;
+		}
+		// TODO: Throw exception if login fails
 	}
 	
-	public Page synapseLogin(String user, String password) {
-		WebElement el;
-		el = driver.findElement(By.xpath(synapseLoginInputXpath));
-		el.clear();
-		el.sendKeys(user);
-		el = driver.findElement(By.xpath(synapsePasswordInputXpath));
-		el.clear();
-		el.sendKeys(password);
-		el = driver.findElement(By.xpath(synapseLoginButtonXpath));
-		el.click();
-
-		return new Page(this.driver);
-	}
-	
-	public Page openIdLogin() {
-		return new Page(this.driver);
+	public UserHomePage openIdLogin(String user, String password) throws InterruptedException {
+		UserHomePage p;
+		btnOpenIdLogin.click();
+		// Handle logged in / logged out of Google cases
+		Thread.sleep(2000);	// to handle indirections if already logged in
+		if ("Google Accounts".equals(driver.getTitle().trim())) { // Not logged in
+			// We need to log into Google
+			WebElement el;
+			el = driver.findElement(By.id("Email"));
+			el.sendKeys(user);
+			el = driver.findElement(By.id("Passwd"));
+			el.sendKeys(password);
+			el = driver.findElement(By.id("signIn"));
+			el.click();
+			Thread.sleep(2000);
+		}
+		// We should be back at user homepage
+		// TODO: Check
+		p = PageFactory.initElements(driver, UserHomePage.class);
+		return p;
 	}
 	
 }

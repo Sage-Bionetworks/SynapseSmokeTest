@@ -1,18 +1,20 @@
 package org.sagebionetworks.smokeTest;
 
 import static org.junit.Assert.assertEquals;
+import org.openqa.selenium.By;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.FindBy;
 
-/*
- *	This is the page we land on originally 
-*/
+/**
+ *
+ * @author xavier
+ */
 public class UserHomePage extends Page {
 	
-	public UserHomePage(WebDriver driver) throws RuntimeException {
+	public UserHomePage(WebDriver driver) {
 		super(driver);
 	}
 	

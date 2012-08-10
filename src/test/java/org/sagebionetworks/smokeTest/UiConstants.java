@@ -23,9 +23,10 @@ public class UiConstants {
 	
 	// Logout page
 	public static final String ID_BTN_LOGIN_AGAIN = "id_btn_login_again";
+	public static final String ID_MNU_USER_PROFILE = "id_mnu_user_profile";
+	public static final String ID_MNU_USER_LOGOUT = "id_mnu_user_logout";
+	public static final String ID_BTN_GOOGLE_LOGIN = "login-via-gapp-google";
+	public static final String STR_LOGOUT_PAGE = "#LoginPlace:logout";
+	public static final String STR_LOGIN_PAGE = "#LoginPlace:0";
 	
-	/*
-	 * 
-	 */
-
 }
