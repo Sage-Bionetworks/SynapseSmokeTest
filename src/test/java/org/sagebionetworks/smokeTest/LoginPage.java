@@ -50,6 +50,21 @@ public class LoginPage extends Page {
 		// TODO: Throw exception if login fails
 	}
 	
+	public UserHomePage synapseLoginWithTOS(String user, String password) throws InterruptedException {
+		inputSynapseLogin.clear();
+		inputSynapseLogin.sendKeys(user);
+		inputSynapsePassword.clear();
+		inputSynapsePassword.sendKeys(password);
+		Thread.sleep(500);
+		btnSynapseLogin.click();
+		Thread.sleep(2000);
+		// The TOS should show up
+		WebElement e = driver.findElement(By.xpath("//button[text()='I Agree'"));
+		e.click();
+		UserHomePage p = PageFactory.initElements(driver, UserHomePage.class);
+		return p;
+	}
+	
 	public UserHomePage openIdLogin(String user, String password) throws InterruptedException {
 		UserHomePage p;
 		btnOpenIdLogin.click();

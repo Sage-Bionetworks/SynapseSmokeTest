@@ -123,7 +123,7 @@ public class AppTest {
 
 	}
 	
-	
+	@Ignore
 	@Test
 	public void testOpenIdLoginLoggedIn() throws Exception {
 		LoginPage loginPage = AppTest.homePage.login();
@@ -144,10 +144,9 @@ public class AppTest {
 		Thread.sleep(1000L);
 		// TODO: Delete test account if exists
 		//	Register in UI
-		RegisterPage registerPage = homePage.register();
-		registerPage.register(testConfiguration.getNewUserEmailName(), testConfiguration.getNewUserFirstName(), testConfiguration.getNewUserLastName());
-		el = driver.findElement(By.cssSelector("h2"));
-		assertEquals("Register With Synapse", el.getText().trim());
+		RegisterPage registerPage = AppTest.homePage.register();
+		registerPage = registerPage.register(testConfiguration.getNewUserEmailName(), testConfiguration.getNewUserFirstName(), testConfiguration.getNewUserLastName());
+		assertTrue(registerPage.isUserCreated());
 		
 		// TODO: Put in utility function
 		// Get link from mail msg
@@ -166,32 +165,16 @@ public class AppTest {
 		// Set new user password
 		driver.get(url);
 		Thread.sleep(1000);
-		el = driver.findElement(By.cssSelector("h2"));
-		assertEquals("Password Reset", el.getText().trim());
-		// Enter and confirm password
-		el = driver.findElement(By.id("x-auto-12-input"));
-		el.clear();
-		el.sendKeys(testConfiguration.getNewUserSynapsePassword());
-		el = driver.findElement(By.id("x-auto-13-input"));
-		el.clear();
-		el.sendKeys(testConfiguration.getNewUserSynapsePassword());
-		List<WebElement> l = driver.findElements(By.cssSelector("button.x-btn-text"));
-		for (WebElement e : l) {
-			if ("Submit".equals(e.getText().trim())) {
-				e.click();
-				break;
-			}
-		}
+		PasswordResetPage passwordResetPage = PageFactory.initElements(driver, PasswordResetPage.class);
+		LoginPage loginPage = passwordResetPage.resetPassword(testConfiguration.getNewUserSynapsePassword());
+		UserHomePage userHomePage = loginPage.synapseLoginWithTOS(testConfiguration.getNewUserEmailName(), testConfiguration.getNewUserSynapsePassword());
+		// TODO: Check that we're really on user home page
+		assertTrue(userHomePage.loggedIn());
 		
-		// Back to login page
-//		//!!! Not like that anymore, first need to sign end-user agreement !!!
-//		el = driver.findElement(By.cssSelector("h5"));
-//		msg = "Welcome " + newUserFirstName + " " + newUserLastName;
-//		assertEquals(msg, el.getText().trim());
-
 		// Logout
-		el = driver.findElement(By.linkText("LOGOUT"));
-		el.click();
+		userHomePage.logout();
+		assertFalse(userHomePage.loggedIn());
+		
 		// Cleanup registered user
 		Helpers.deleteRegisteredUserInCrowd(
 				driver,

@@ -7,10 +7,10 @@ import org.openqa.selenium.support.FindBy;
 
 public class RegisterPage extends Page {
 
-	private static final String newUserEmailInputXpath = "x-auto-23-input";
-	private static final String newUserFirstNameInputXpath = "x-auto-24-input";
-	private static final String newUserLastNameInputXpath = "x-auto-25-input";
-	private static final String btnRegisterXpath = "";
+	private static final String newUserEmailInputXpath = "//input[@id='"+ UiConstants.ID_INP_REG_EMAIL_ADDRESS + "-input"+"']";
+	private static final String newUserFirstNameInputXpath = "//input[@id='"+ UiConstants.ID_INP_REG_FIRST_NAME + "-input"+"']";
+	private static final String newUserLastNameInputXpath = "//input[@id='"+ UiConstants.ID_INP_REG_LAST_NAME + "-input"+"']";
+	private static final String btnRegisterXpath = "//table[@id='"+UiConstants.ID_BTN_REGISTER2+"']/tbody/tr[2]/td[2]/em/button";
 
 	@FindBy(xpath = newUserEmailInputXpath)
 	WebElement inputNewUserEmail;
@@ -37,7 +37,8 @@ public class RegisterPage extends Page {
 		return this;
 	}
 	
-	public boolean isSynapseAccountCreated() {
+	public boolean isUserCreated() {
+		// TODO: Check for panel "Register with Synapse"
 		return true;
 	}
 }
