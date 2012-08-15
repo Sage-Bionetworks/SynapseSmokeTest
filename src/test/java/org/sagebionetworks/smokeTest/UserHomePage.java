@@ -14,8 +14,20 @@ import org.openqa.selenium.support.FindBy;
  */
 public class UserHomePage extends Page {
 	
+	private static final String startProjectBtnXpath = "//a[@id='id_btn_start_project']";
+	
+	@FindBy(xpath=startProjectBtnXpath)
+	WebElement btnStartProject;
+	
 	public UserHomePage(WebDriver driver) {
 		super(driver);
 	}
 	
+	public ProjectCreatePage startProject() throws InterruptedException {
+
+		btnStartProject.click();
+		Thread.sleep(500);
+		ProjectCreatePage p = PageFactory.initElements(driver, ProjectCreatePage.class);
+		return p;
+	}
 }

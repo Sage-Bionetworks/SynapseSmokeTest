@@ -1,5 +1,6 @@
 package org.sagebionetworks.smokeTest;
 
+import java.util.ArrayList;
 import org.junit.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -106,5 +107,44 @@ public class Helpers {
 		el.click();
 	}
 	
+	public boolean isLoggedIntoGoogle(WebDriver driver) {
+		final String googleUrl = "http://google.com";
+		boolean rc = false;
+		driver.get(googleUrl);
+		List<WebElement> l = driver.findElements(By.xpath("//span[contains(text(), 'Sign in')]"));
+		if (0 == l.size()) {
+			rc = true;
+		}
+		return rc;
+	}
+	
+	public void logOutOfGoogle(WebDriver driver, String user) throws Exception {
+		final String googleUrl = "http://google.com";
+		final String googleUserNameBtnXpath = "//a/span[contains(text(), '" + user + "')]";
+		final String googleSingOutBtnXpath = "//a[contains)text(), 'Sign out')]";
+		driver.get(googleUrl);
+		List<WebElement> l = driver.findElements(By.xpath(googleUserNameBtnXpath));
+		if (1 != l.size()) {
+			// Either not logged in or logged in as different user
+			return;
+		} else {
+			l.get(0).click();
+			WebElement e = driver.findElement(By.xpath(googleSingOutBtnXpath));
+			e.click();
+		}
+	}
+
+//	// TODO: Handle case where logged in as different user than specified
+//	public void logIntoGoogle(WebDriver driver) {
+//		final String googleUrl = "http://google.com";
+//		driver.get(googleUrl);
+//		List<WebElement> l = driver.findElements(By.xpath("//span[contains(text(), 'Sign in')]"));
+//		if (0 == l.size()) {
+//			return;	// Already logged in
+//		} else {
+//			// There's only one match on the page, use it...
+//			l.get(0).click();
+//		}
+//	}
 
 }
