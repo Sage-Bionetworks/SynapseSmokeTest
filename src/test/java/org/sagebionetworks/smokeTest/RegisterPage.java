@@ -25,14 +25,18 @@ public class RegisterPage extends Page {
 		super(driver);
 	}
 	
-	public RegisterPage register(String userEmail, String userFirstName, String userLastName) {
+	public RegisterPage register(String userEmail, String userFirstName, String userLastName) throws InterruptedException {
 		inputNewUserEmail.clear();
 		inputNewUserEmail.sendKeys(userEmail);
+		Thread.sleep(100);
 		inputNewUserFirstName.clear();
 		inputNewUserFirstName.sendKeys(userFirstName);
+		Thread.sleep(100);
 		inputNewUserLastName.clear();
 		inputNewUserLastName.sendKeys(userLastName);
+		Thread.sleep(1000);
 		btnRegister.click();
+		Thread.sleep(1000);
 		// TODO: Add check for "Register with Synapse" label
 		return this;
 	}

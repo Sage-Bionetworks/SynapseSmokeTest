@@ -29,12 +29,14 @@ public class PasswordResetPage extends Page {
 		super(driver);
 	}
 	
-	public LoginPage resetPassword(String password) {
+	public LoginPage resetPassword(String password) throws InterruptedException {
 		inputNewPassword.clear();
 		inputNewPassword.sendKeys(password);
 		inputConfirmPassword.clear();
 		inputConfirmPassword.sendKeys(password);
+		Thread.sleep(500);
 		btnSubmit.click();
+		Thread.sleep(500);
 		LoginPage p = PageFactory.initElements(driver, LoginPage.class);
 		return p;
 	}

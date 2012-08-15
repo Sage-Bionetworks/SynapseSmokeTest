@@ -27,4 +27,16 @@ public class HomePage extends Page {
 		p = PageFactory.initElements(driver, EntityPage.class);
 		return p;
 	}
+	
+	// Can't get the xpath to work...
+	public SearchResultsPage doSearch(String searchTerm) {
+		return null;
+//		WebElement btn = driver.findElement(By.xpath("//a[class='gwt-Anchor x-component'][text()='Search']"));
+//		WebElement inp = driver.findElement(By.xpath("//input[class='text'][class='homesearchbox']"));
+//		SearchResultsPage p;
+//		inp.sendKeys(searchTerm);
+//		btn.click();
+//		p = PageFactory.initElements(driver, SearchResultsPage.class);
+//		return p;
+	}
 }

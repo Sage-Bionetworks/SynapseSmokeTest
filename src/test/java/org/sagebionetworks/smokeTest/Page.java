@@ -12,6 +12,7 @@ public class Page {
 	private static final String registerButtonXpath = "//table[@id='"+UiConstants.ID_BTN_REGISTER+"']/tbody/tr[2]/td[2]/em/button";
 	private static final String userButtonXpath = "//table[@id='"+UiConstants.ID_BTN_USER+"']/tbody/tr[2]/td[2]/em/button";
 	private static final String menuItemLogoutXpath = "//a[@id='" + UiConstants.ID_MNU_USER_LOGOUT + "']";
+	private static final String imgSynapseTitleXpath = "//a[href='#']";
 
 	@FindBy(xpath=loginButtonXpath)
 	private WebElement btnLogin;
@@ -22,6 +23,9 @@ public class Page {
 	WebElement btnUser;
 	@FindBy(xpath=menuItemLogoutXpath)
 	WebElement mnuItemLogout;
+	
+	@FindBy(xpath=imgSynapseTitleXpath)
+	WebElement imgSynapseTitle;
 	
 	
 	WebDriver driver;
@@ -54,6 +58,12 @@ public class Page {
 		btnRegister.click();
 		RegisterPage registerPage = PageFactory.initElements(this.driver, RegisterPage.class);
 		return registerPage;
+	}
+	
+	public UserHomePage goHome() {
+		imgSynapseTitle.click();
+		UserHomePage userHomePage = PageFactory.initElements(this.driver, UserHomePage.class);
+		return userHomePage;
 	}
 	
 	

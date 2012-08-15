@@ -81,6 +81,14 @@ public class AppTest {
 		assertEquals(scrPage.getDriverUrl(), baseUrl+"#Synapse:syn150935");
 		
 	}
+	
+	@Ignore
+	@Test
+	public void testAnonSearch() throws Exception {
+		assertFalse(AppTest.homePage.loggedIn());
+		SearchResultsPage p = AppTest.homePage.doSearch("cancer");
+		assertEquals(p.getDriverUrl(), baseUrl + "#Search:cancer");
+	}
 
 	@Ignore
 	@Test
@@ -136,7 +144,7 @@ public class AppTest {
 		assertFalse(p.loggedIn());
 	}
 	
-	@Ignore
+	
 	@Test
 	public void testRegisterUser() throws Exception {
 		WebElement el;
@@ -150,6 +158,7 @@ public class AppTest {
 		
 		// TODO: Put in utility function
 		// Get link from mail msg
+		Thread.sleep(10000);	// Give some time for mail to arrive
 		String msg = Helpers.getRegistrationMail(testConfiguration.getNewUserEmailName(), testConfiguration.getNewUserEmailPassword());
 		Pattern p = Pattern.compile("https://.+");
 		Matcher m = p.matcher(msg);
