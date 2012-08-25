@@ -35,19 +35,17 @@ import org.openqa.selenium.support.ui.Select;
 
 public class AppTest {
 	// TODO: Implement DriverFactory to handle different types and singleton
+
 	private static WebDriver driver;
 	private static HomePage homePage;
 	private static TestConfiguration testConfiguration;
-	
 	private static String baseUrl;
-	
 	private static final String synapseLoginInputXpath = "//div/div/input[@type='text']";
 	private static final String synapsePasswordInputXpath = "//div/div/input[@type='password']";
 	private static final String newUserEmailIputXpath = "x-auto-23-input";
 	private static final String newUserFirstNameInputXpath = "x-auto-24-input";
 	private static final String newUserLastNameInputXpath = "x-auto-25-input";
-	
-	
+
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		loadProperties("");
@@ -55,33 +53,33 @@ public class AppTest {
 		baseUrl = testConfiguration.getSynapseHomepageUrl();
 		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
 	}
-	
+
 	@AfterClass
 	public static void tearDownClass() throws Exception {
 		driver.quit();
 	}
-	
+
 	@Before
 	public void setUp() throws Exception {
 		driver.get(baseUrl);
 		Thread.sleep(5000);
-		assertEquals(baseUrl, driver.getCurrentUrl());
+		assertEquals(baseUrl + "/", driver.getCurrentUrl());
 		homePage = PageFactory.initElements(driver, HomePage.class);
 		homePage.setBaseUrl(baseUrl);
 	}
-	
+
 	@Ignore
 	@Test
 	public void testAnonBrowse() throws Exception {
 		WebElement el;
 		String url;
-		
+
 		assertFalse(AppTest.homePage.loggedIn());
 		EntityPage scrPage = AppTest.homePage.gotoSCR();
-		assertEquals(scrPage.getDriverUrl(), baseUrl+"#Synapse:syn150935");
-		
+		assertEquals(scrPage.getDriverUrl(), baseUrl + "#Synapse:syn150935");
+
 	}
-	
+
 	@Ignore
 	@Test
 	public void testAnonSearch() throws Exception {
@@ -94,56 +92,56 @@ public class AppTest {
 	@Test
 	public void testSynapseLoginFailure() throws Exception {
 		LoginPage loginPage = AppTest.homePage.login();
-		assertEquals(loginPage.getDriverUrl(), baseUrl + UiConstants.STR_LOGIN_PAGE);
+		assertEquals(loginPage.getDriverUrl(), baseUrl + "/" + UiConstants.STR_LOGIN_PAGE);
 		UserHomePage p = loginPage.synapseLogin("abcde@xxx.org", "abcde");
 		assertNull(p);
 		// TODO: check for error message on login page >> change API
 	}
-	
+
 	@Ignore
 	@Test
 	public void testSynapseLoginSuccess() throws Exception {
 		LoginPage loginPage = AppTest.homePage.login();
-		assertEquals(loginPage.getDriverUrl(), baseUrl + UiConstants.STR_LOGIN_PAGE);
+		assertEquals(loginPage.getDriverUrl(), baseUrl + "/" + UiConstants.STR_LOGIN_PAGE);
 		UserHomePage p = loginPage.synapseLogin(testConfiguration.getExistingSynapseUserEmailName(), testConfiguration.getExistingSynapseUserPassword());
 		assertNotNull(p);
 		assertTrue(p.loggedIn());
-		
+
 		// Technically, should get a LogoutPage here...
 		p.logout();
+		assertEquals(p.getDriverUrl(), baseUrl + "/" + UiConstants.STR_LOGOUT_PAGE);
 		assertFalse(p.loggedIn());
-		assertEquals(p.getDriverUrl(), baseUrl+UiConstants.STR_LOGOUT_PAGE);
 	}
-	
+
 	@Ignore
 	@Test
 	public void testOpenIdLoginNotLoggedIn() throws Exception {
 		// TODO: Logout of Google if logged in
 		LoginPage loginPage = AppTest.homePage.login();
-		assertEquals(loginPage.getDriverUrl(), baseUrl + UiConstants.STR_LOGIN_PAGE);
+		assertEquals(loginPage.getDriverUrl(), baseUrl + "/" + UiConstants.STR_LOGIN_PAGE);
 		UserHomePage p = loginPage.openIdLogin(testConfiguration.getExistingSynapseUserEmailName(), testConfiguration.getExistingSynapseUserPassword());
 		assertNotNull(p);
 		assertTrue(p.loggedIn());
-		
+
 		p.logout();
 		assertFalse(p.loggedIn());
-		assertEquals(p.getDriverUrl(), baseUrl+UiConstants.STR_LOGOUT_PAGE);
+		assertEquals(p.getDriverUrl(), baseUrl + UiConstants.STR_LOGOUT_PAGE);
 
 	}
-	
+
 	@Ignore
 	@Test
 	public void testOpenIdLoginLoggedIn() throws Exception {
 		LoginPage loginPage = AppTest.homePage.login();
-		assertEquals(loginPage.getDriverUrl(), baseUrl + UiConstants.STR_LOGIN_PAGE);
+		assertEquals(loginPage.getDriverUrl(), baseUrl + "/" + UiConstants.STR_LOGIN_PAGE);
 		UserHomePage p = loginPage.openIdLogin("", "");
 		assertNotNull(p);
 		assertTrue(p.loggedIn());
-		
+
 		p.logout();
 		assertFalse(p.loggedIn());
 	}
-	
+
 	
 	@Test
 	public void testRegisterUser() throws Exception {
@@ -155,7 +153,7 @@ public class AppTest {
 		RegisterPage registerPage = AppTest.homePage.register();
 		registerPage = registerPage.register(testConfiguration.getNewUserEmailName(), testConfiguration.getNewUserFirstName(), testConfiguration.getNewUserLastName());
 		assertTrue(registerPage.isUserCreated());
-		
+
 		// TODO: Put in utility function
 		// Get link from mail msg
 		Thread.sleep(10000);	// Give some time for mail to arrive
@@ -169,7 +167,7 @@ public class AppTest {
 			url = m.group();
 		}
 		assertEquals(1, nMatches);
-		
+
 		// This should be equivalent to Reset Password method
 		// Set new user password
 		driver.get(url);
@@ -179,11 +177,11 @@ public class AppTest {
 		UserHomePage userHomePage = loginPage.synapseLoginWithTOS(testConfiguration.getNewUserEmailName(), testConfiguration.getNewUserSynapsePassword());
 		// TODO: Check that we're really on user home page
 		assertTrue(userHomePage.loggedIn());
-		
+
 		// Logout
 		userHomePage.logout();
 		assertFalse(userHomePage.loggedIn());
-		
+
 		// Cleanup registered user
 		Helpers.deleteRegisteredUserInCrowd(
 				driver,
@@ -194,7 +192,7 @@ public class AppTest {
 				testConfiguration.getNewUserFirstName(),
 				testConfiguration.getNewUserLastName());
 	}
-	
+
 	@Ignore
 	@Test
 	public void testGetEmail() throws Exception {
@@ -212,14 +210,14 @@ public class AppTest {
 			}
 		}
 	}
-	
+
 	@Ignore
 	@Test
 	public void testloadProperties() throws Exception {
 		loadProperties("");
 		assertNotNull(testConfiguration.getNewUserEmailName());
 	}
-	
+
 	@Ignore
 	@Test
 	public void testDeleteRegisteredUser() throws Exception {
@@ -232,7 +230,7 @@ public class AppTest {
 				testConfiguration.getNewUserFirstName(),
 				testConfiguration.getNewUserLastName());
 	}
-	
+
 	private static void loadProperties(String path) throws Exception {
 		Properties props = new Properties();
 		InputStream is = AppTest.class.getClassLoader().getResourceAsStream("smoke.properties");
@@ -243,20 +241,18 @@ public class AppTest {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	@Ignore
 	@Test
 	public void testChromeDriver() {
 //	  // Optional, if not specified, WebDriver will search your path for chromedriver.
 //	  System.setProperty("webdriver.chrome.driver", "/usr/local/chromedriver");
 
-	  WebDriver driver = new ChromeDriver();
-	  driver.get("http://www.google.com/xhtml");
-	  WebElement searchBox = driver.findElement(By.name("q"));
-	  searchBox.sendKeys("ChromeDriver");
-	  searchBox.submit();
-	  driver.quit();
+		WebDriver driver = new ChromeDriver();
+		driver.get("http://www.google.com/xhtml");
+		WebElement searchBox = driver.findElement(By.name("q"));
+		searchBox.sendKeys("ChromeDriver");
+		searchBox.submit();
+		driver.quit();
 	}
-	
-
 }
