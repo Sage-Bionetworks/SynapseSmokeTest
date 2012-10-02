@@ -10,7 +10,7 @@ import org.openqa.selenium.support.PageFactory;
 public class Page {
 	private static final String loginButtonXpath = "//table[@id='"+UiConstants.ID_BTN_LOGIN+"']/tbody/tr[2]/td[2]/em/button";
 	private static final String registerButtonXpath = "//table[@id='"+UiConstants.ID_BTN_REGISTER+"']/tbody/tr[2]/td[2]/em/button";
-	private static final String userButtonXpath = "//table[@id='"+UiConstants.ID_BTN_USER+"']/tbody/tr[2]/td[2]/em/button";
+	private static final String userButtonXpath = "//*/a[@class='gwt-Anchor headerUsernameLink']";
 	private static final String menuItemLogoutXpath = "//a[@id='" + UiConstants.ID_MNU_USER_LOGOUT + "']";
 	private static final String imgSynapseTitleXpath = "//a[href='#']";
 

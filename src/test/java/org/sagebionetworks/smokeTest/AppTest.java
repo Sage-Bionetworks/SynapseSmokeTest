@@ -68,7 +68,7 @@ public class AppTest {
 		homePage.setBaseUrl(baseUrl);
 	}
 
-	@Ignore
+	
 	@Test
 	public void testAnonBrowse() throws Exception {
 		WebElement el;
@@ -76,7 +76,7 @@ public class AppTest {
 
 		assertFalse(AppTest.homePage.loggedIn());
 		EntityPage scrPage = AppTest.homePage.gotoSCR();
-		assertEquals(scrPage.getDriverUrl(), baseUrl + "#Synapse:syn150935");
+		assertEquals(scrPage.getDriverUrl(), baseUrl + "/#Synapse:syn150935");
 
 	}
 
@@ -85,10 +85,10 @@ public class AppTest {
 	public void testAnonSearch() throws Exception {
 		assertFalse(AppTest.homePage.loggedIn());
 		SearchResultsPage p = AppTest.homePage.doSearch("cancer");
-		assertEquals(p.getDriverUrl(), baseUrl + "#Search:cancer");
+		assertEquals(p.getDriverUrl(), baseUrl + "/#Search:cancer");
 	}
 
-	@Ignore
+	
 	@Test
 	public void testSynapseLoginFailure() throws Exception {
 		LoginPage loginPage = AppTest.homePage.login();
@@ -142,7 +142,7 @@ public class AppTest {
 		assertFalse(p.loggedIn());
 	}
 
-	
+	@Ignore
 	@Test
 	public void testRegisterUser() throws Exception {
 		WebElement el;
