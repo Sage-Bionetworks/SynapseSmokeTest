@@ -46,6 +46,10 @@ public class AppTest {
 	private static final String newUserFirstNameInputXpath = "x-auto-24-input";
 	private static final String newUserLastNameInputXpath = "x-auto-25-input";
 
+	/**
+	 *
+	 * @throws Exception
+	 */
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		loadProperties("");
@@ -63,7 +67,7 @@ public class AppTest {
 	public void setUp() throws Exception {
 		driver.get(baseUrl);
 		Thread.sleep(5000);
-		assertEquals(baseUrl + "/", driver.getCurrentUrl());
+		assertEquals(baseUrl, driver.getCurrentUrl());
 		homePage = PageFactory.initElements(driver, HomePage.class);
 		homePage.setBaseUrl(baseUrl);
 	}
@@ -76,7 +80,7 @@ public class AppTest {
 
 		assertFalse(AppTest.homePage.loggedIn());
 		EntityPage scrPage = AppTest.homePage.gotoSCR();
-		assertEquals(scrPage.getDriverUrl(), baseUrl + "/#Synapse:syn150935");
+		assertEquals(scrPage.getDriverUrl(), baseUrl + "#Synapse:syn150935");
 
 	}
 
@@ -88,7 +92,7 @@ public class AppTest {
 		assertEquals(p.getDriverUrl(), baseUrl + "/#Search:cancer");
 	}
 
-	
+	@Ignore
 	@Test
 	public void testSynapseLoginFailure() throws Exception {
 		LoginPage loginPage = AppTest.homePage.login();
