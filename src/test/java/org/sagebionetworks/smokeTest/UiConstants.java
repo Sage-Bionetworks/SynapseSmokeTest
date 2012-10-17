@@ -24,8 +24,8 @@ public class UiConstants {
 	public static final String ID_MNU_USER_LOGOUT = "id_mnu_user_logout";
 	public static final String ID_BTN_GOOGLE_LOGIN = "login-via-gapp-google";
 	// TODO: Rename as *_SUFFIX
-	public static final String STR_LOGOUT_PAGE = "#LoginPlace:logout";
-	public static final String STR_LOGIN_PAGE = "#LoginPlace:0";
+	public static final String STR_LOGOUT_PAGE = "/#LoginPlace:logout";
+	public static final String STR_LOGIN_PAGE = "/#LoginPlace:0";
 	public static final String ID_INP_REG_EMAIL_ADDRESS = "id_inp_email_address";
 	public static final String ID_INP_REG_FIRST_NAME = "id_inp_firstname";
 	public static final String ID_INP_REG_LAST_NAME = "id_inp_lastname";

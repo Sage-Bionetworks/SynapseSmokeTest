@@ -67,7 +67,7 @@ public class AppTest {
 	public void setUp() throws Exception {
 		driver.get(baseUrl);
 		Thread.sleep(5000);
-		assertEquals(baseUrl, driver.getCurrentUrl());
+		assertEquals(baseUrl + "/", driver.getCurrentUrl());
 		homePage = PageFactory.initElements(driver, HomePage.class);
 		homePage.setBaseUrl(baseUrl);
 	}
@@ -80,49 +80,58 @@ public class AppTest {
 
 		assertFalse(AppTest.homePage.loggedIn());
 		EntityPage scrPage = AppTest.homePage.gotoSCR();
-		assertEquals(scrPage.getDriverUrl(), baseUrl + "#Synapse:syn150935");
+		assertEquals(scrPage.getDriverUrl(), baseUrl + "/#Synapse:syn150935");
 
 	}
 
-	@Ignore
+	/**
+	 *
+	 * @throws Exception
+	 */
+	
 	@Test
+	// TODO: Fix
 	public void testAnonSearch() throws Exception {
 		assertFalse(AppTest.homePage.loggedIn());
 		SearchResultsPage p = AppTest.homePage.doSearch("cancer");
 		assertEquals(p.getDriverUrl(), baseUrl + "/#Search:cancer");
 	}
 
-	@Ignore
+	/**
+	 *
+	 * @throws Exception
+	 */
+	
 	@Test
 	public void testSynapseLoginFailure() throws Exception {
 		LoginPage loginPage = AppTest.homePage.login();
-		assertEquals(loginPage.getDriverUrl(), baseUrl + "/" + UiConstants.STR_LOGIN_PAGE);
+		assertEquals(loginPage.getDriverUrl(), baseUrl + UiConstants.STR_LOGIN_PAGE);
 		UserHomePage p = loginPage.synapseLogin("abcde@xxx.org", "abcde");
 		assertNull(p);
 		// TODO: check for error message on login page >> change API
 	}
 
-	@Ignore
+	
 	@Test
 	public void testSynapseLoginSuccess() throws Exception {
 		LoginPage loginPage = AppTest.homePage.login();
-		assertEquals(loginPage.getDriverUrl(), baseUrl + "/" + UiConstants.STR_LOGIN_PAGE);
+		assertEquals(loginPage.getDriverUrl(), baseUrl + UiConstants.STR_LOGIN_PAGE);
 		UserHomePage p = loginPage.synapseLogin(testConfiguration.getExistingSynapseUserEmailName(), testConfiguration.getExistingSynapseUserPassword());
 		assertNotNull(p);
 		assertTrue(p.loggedIn());
 
 		// Technically, should get a LogoutPage here...
 		p.logout();
-		assertEquals(p.getDriverUrl(), baseUrl + "/" + UiConstants.STR_LOGOUT_PAGE);
+		assertEquals(p.getDriverUrl(), baseUrl + UiConstants.STR_LOGOUT_PAGE);
 		assertFalse(p.loggedIn());
 	}
 
-	@Ignore
+	
 	@Test
 	public void testOpenIdLoginNotLoggedIn() throws Exception {
 		// TODO: Logout of Google if logged in
 		LoginPage loginPage = AppTest.homePage.login();
-		assertEquals(loginPage.getDriverUrl(), baseUrl + "/" + UiConstants.STR_LOGIN_PAGE);
+		assertEquals(loginPage.getDriverUrl(), baseUrl + UiConstants.STR_LOGIN_PAGE);
 		UserHomePage p = loginPage.openIdLogin(testConfiguration.getExistingSynapseUserEmailName(), testConfiguration.getExistingSynapseUserPassword());
 		assertNotNull(p);
 		assertTrue(p.loggedIn());
@@ -135,9 +144,10 @@ public class AppTest {
 
 	@Ignore
 	@Test
+	// TODO: Behaves as coded outside test but gets an extra stop when tested???
 	public void testOpenIdLoginLoggedIn() throws Exception {
 		LoginPage loginPage = AppTest.homePage.login();
-		assertEquals(loginPage.getDriverUrl(), baseUrl + "/" + UiConstants.STR_LOGIN_PAGE);
+		assertEquals(loginPage.getDriverUrl(), baseUrl + UiConstants.STR_LOGIN_PAGE);
 		UserHomePage p = loginPage.openIdLogin("", "");
 		assertNotNull(p);
 		assertTrue(p.loggedIn());
